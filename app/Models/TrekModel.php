@@ -46,6 +46,16 @@ class TrekModel extends Model{
       
     }
 
+    public function get_itinerary_Trek($trek_id =""){
+       
+        $home = new home();
+        $data = array();
+        $url = baseURL1.'/treks/get_itinerary_Trek/'.$trek_id;//exit;
+
+       return $home->CallAPI('GET',$url,$data);
+      
+    }
+
     public function edittrekdata($data){           
         $home = new home();   
         //print_r(json_encode($data));exit;     
@@ -57,6 +67,20 @@ class TrekModel extends Model{
         $home = new home();   
         //print_r(json_encode($data));exit;     
        $url = baseURL1.'/treks/addtrek';//exit;
+       return $home->CallAPI('POST',$url,$data);          
+    }
+
+    public function edittrekiterinarydata($data){           
+        $home = new home();   
+        //print_r(json_encode($data));exit;     
+       $url = baseURL1.'/treks/edittrekiterinarydata';//exit;
+       return $home->CallAPI('POST',$url,$data);          
+    }
+
+    public function addtrekiterinarydata($data){           
+        $home = new home();   
+        //print_r(json_encode($data));exit;     
+       $url = baseURL1.'/treks/addtrekiterinarydata';//exit;
        return $home->CallAPI('POST',$url,$data);          
     }
 

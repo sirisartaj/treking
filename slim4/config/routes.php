@@ -46,8 +46,12 @@ return function (App $app) {
   //Treks
   $app->get('/treks/gettreks',\App\Action\Treks\GetTreks::class);
   $app->post('/treks/addtrek',\App\Action\Treks\AddTrek::class);
+  $app->post('/treks/edittrekiterinarydata',\App\Action\Treks\EditTrekIterinary::class);
+  $app->post('/treks/addtrekiterinarydata',\App\Action\Treks\AddTrekIterinary::class);
   $app->post('/treks/updatetrek',\App\Action\Treks\UpdateTrek::class);
   $app->get('/treks/gettrek/{trekId}', \App\Action\Treks\GetTrek::class);
+  $app->get('/treks/get_itinerary_Trek/{trekId}', \App\Action\Treks\GetItineraryTrek::class);
+
   $app->delete('/treks/deletetrek/{trekId}',\App\Action\Treks\DeleteTrek::class);
   $app->post('/treks/updatetrekstatus', \App\Action\Treks\UpdateTrekStatus::class);
 

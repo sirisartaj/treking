@@ -59,6 +59,51 @@ final class Treks
     }
     return $status;
   }
+
+  public function addTrekIterinary($data) {
+    extract($data);
+    if(empty($iterinary_title))
+    {
+      $status = array(
+      'status' => "208",
+      'message' => "Failure iterinary title is required"
+      );
+    }else{
+            
+        $trekId = $this->repository->addTrekIterinaryDetails($data);
+         if($trekId){
+           $status = array(
+              'status' => "200",
+              'message' => "Inserted Successfully"
+           );
+         }
+      
+    }
+    return $status;
+  }
+
+  public function editTrekIterinary($data) {
+    
+    extract($data);
+    if(empty($iterinary_title))
+    {
+      $status = array(
+      'status' => "208",
+      'message' => "Failure iterinary title is required"
+      );
+    }else{
+            
+        $trekId = $this->repository->updateTrekIterinaryDetails($data);
+         if($trekId){
+           $status = array(
+              'status' => "200",
+              'message' => "Inserted Successfully"
+           );
+         }
+      
+    }
+    return $status;
+  }
   public function updateTrek($data) {
     extract($data);
     if(empty($trek_title))
@@ -76,6 +121,11 @@ final class Treks
     $trek = $this->repository->getTrek($data);
     return $trek;
   }
+  public function getItineraryTrek($data) { 
+    $trek = $this->repository->getItineraryTrek($data);
+    return $trek;
+  }
+  
   public function deleteTrek($data) {
     $trek = $this->repository->deleteTrek($data);
     return $trek;

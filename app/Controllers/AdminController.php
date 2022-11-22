@@ -71,7 +71,7 @@ class AdminController extends Controller
                 $_SESSION['message'] = $a->message;
                 return redirect()->to('addTrek');
             }else{
-                
+
                 $data['validation'] = $this->validator;
                 echo view('treking\addtrek', $data);
             }
@@ -145,17 +145,35 @@ class AdminController extends Controller
         helper(['form']);
         $rules = [ ];
         $trek = (array) $TrekModel->getTrek($trek_id);
-       // echo "<pre>";print_r($trek['trek_details']['treks']);exit;
         if($trek['status'] =200){
              $data['result']  = $trek['trek_details']->treks;
         }
-        //print_r($data);exit;
-        //echo $data['trek']['trek_fname'];exit;
+        
         $data['Headding']="Edit Trek";
         if($this->validate($rules)){}else{
             $data['validation'] = $this->validator;
         }
         echo view('treking/trekedit',$data);
+    }
+    function gettrekitinerary($trek_id=''){
+            $TrekModel = new TrekModel();
+            $data['trek_id'] =$trek_id;
+            helper(['form']);
+            $rules = [ ];
+            $trek = (array) $TrekModel->get_itinerary_Trek($trek_id);
+            //print_r($trek);exit;
+            if($trek['status'] =200){
+                 $data['result']  = json_decode(json_encode($trek['trek_details']));
+            }
+           // echo "<pre>";
+            //print_r($data['result']);
+            $data['Headding']="Itinerary Trek";
+            if($this->validate($rules)){
+
+            }else{
+                $data['validation'] = $this->validator;
+            }
+            echo view('treking/trek_itinerary',$data);
     }
 
     function gettreks(){
@@ -181,9 +199,7 @@ class AdminController extends Controller
             $filename = $name.'.'.$ext;
 
            $file->move(baseimgURL.$foldername.'/', $filename);
-          // $data['path'] = WRITEPATH.'uploads\treking';
-          // echo $filename;
-           //echo json_encode($data);
+          
             echo SITEURL.$foldername.'/'.$filename; //change this URL
           } else {
             echo $message = 'Ooops!  Your upload triggered the following error:  '.$_FILES['file']['error'];
@@ -192,32 +208,55 @@ class AdminController extends Controller
         
     }
 
-    function changepwd(){
-        $TrekModel = new TrekModel();
+    function trekiterinarystore()
+    {
+        $entered = $this->request->getVar();
+        //echo count($entered);exit;
+        
+        
+        //print_r($udata);
+        //exit;
         helper(['form']);
-        $rules = [            
-            'trek_password'      => 'required|min_length[4]|max_length[50]',
-            'cpassword'  => 'matches[trek_password]'
-        ];
-          
-        if($this->validate($rules)){ 
+       
+        if(1){ 
             $TrekModel = new TrekModel();
-            $data = [                
-                'trek_password' => password_hash($this->request->getVar('trek_password'), PASSWORD_DEFAULT),               
-                'temp_password' => $this->request->getVar('trek_password'),               
-            ];
-           
-            $a = $TrekModel->changepwd($data);
-           // print_r($a);exit;
-            $_SESSION['message'] = $a->message;
-            return redirect()->to('gettreks');
+            for($i=0;$i<count($entered);$i++){
+            if($entered['iterinary_id'][$i]){
+                $udata = [
+                    'iterinary_id'=>$entered['iterinary_id'][$i],
+                    'iterinary_title'=>$this->request->getVar('iterinary_title')[$i],
+                    'iterinary_details' =>$this->request->getVar('iterinary_details')[$i],
+                    'trek_id'=>$this->request->getVar('trek_id'),
+                    'modified_date'=>date('Y-m-d H:i:s'),
+                    'modified_by'=>"1"
+                ];
+                $a[] = $TrekModel->edittrekiterinarydata($udata);
+            }else{                
+                $idata = [                    
+                    'trek_id'=>$this->request->getVar('trek_id'),
+                    'created_date'=>date('Y-m-d H:i:s'),
+                    'created_by'=>"1",
+                    'status'=>"0",
+                    'iterinary_title'=>$this->request->getVar('iterinary_title')[$i],
+                    'iterinary_details' =>$this->request->getVar('iterinary_details')[$i]
+                ];
+                $a[] = $TrekModel->addtrekiterinarydata($idata);                
+            }           
+            //print_r($udata);exit;
+        }
+
+
+            
+            print_r($a);exit;
+            if($a){
+                $_SESSION['message'] = $a->message;
+                return redirect()->to('/trekslist');
+            }
+            
         }else{
             $data['validation'] = $this->validator;
-            $data['trek_id'] = $trek_id;
-            echo view('changepassword', $data);
+            echo view('treking\addtrek', $data);
         }
-        
-        
-        echo view('gettreks',$trek_id);
     }
+   
 }

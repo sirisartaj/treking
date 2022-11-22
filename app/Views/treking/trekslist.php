@@ -31,7 +31,7 @@
 				<tr>
 					<td><?php echo $k; ?></td>
 					<td><?php echo $value->trek_title; ?></td>
-					<td><a href="trekitinerary.php?trek_id=<?php echo $value->trek_id; ?>">Itinerary</a></td>
+					<td><a href="<?php echo base_url(); ?>/gettrekitinerary/<?php echo $value->trek_id; ?>">Itinerary</a></td>
 					<td><a href="<?php echo base_url(); ?>/getfaq/<?php echo $value->trek_id; ?>">Trek Faq's</a></td>
 					<td><a href="<?php echo base_url(); ?>/gettrek/<?php echo $value->trek_id; ?>">Edit</a></td>
 

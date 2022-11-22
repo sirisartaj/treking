@@ -84,15 +84,16 @@ class TreksRepository
   }
   public function addTrekIterinaryDetails($data) {
     try {
-      extract($data);
+      
+      extract($data);                  
       $query2 = "INSERT INTO ".DBPREFIX."_trekiterinarydetails SET iterinary_title=:iterinary_title, iterinary_details=:iterinary_details,trek_id = :trek_id,created_date = :created_date,created_by=:created_by,recordstatus=:status";
       $stmt2 = $this->connection->prepare($query2);
-      $stmt2->bindParam(':iterinary_title',$title);
-      $stmt2->bindParam(':iterinary_details',$description);
-      $stmt2->bindParam(':trek_id',$trekId);
-      $stmt2->bindParam(':created_date',$createdDate);
-      $stmt2->bindParam(':created_by',$createdBy);
-      $stmt2->bindParam(':status',$status);
+      $stmt2->bindParam(':iterinary_title',$iterinary_title, PDO::PARAM_STR);
+      $stmt2->bindParam(':iterinary_details',$iterinary_details, PDO::PARAM_STR);
+      $stmt2->bindParam(':trek_id',$trek_id, PDO::PARAM_STR);
+      $stmt2->bindParam(':created_date',$created_date, PDO::PARAM_STR);
+      $stmt2->bindParam(':created_by',$created_by, PDO::PARAM_STR);
+      $stmt2->bindParam(':status',$status, PDO::PARAM_STR);
       return $stmt2->execute();
     }catch(PDOException $e) {
       $status = array(
@@ -181,29 +182,19 @@ class TreksRepository
   }
   public function updateTrekIterinaryDetails($data) {
     try {
+      //print_r($data);
       extract($data);
-      if(@$data['id']){
-          $query2 = "UPDATE sg_trekiterinarydetails set iterinary_details=:iterinary_details,iterinary_title=:iterinary_title,modified_date=:modified_date,modified_by=:modified_by,recordstatus=:status where iterinary_id =:iterinary_id";
-          $stmt2 = $db->prepare($query2);
-          $stmt2->bindParam(':iterinary_details', $description);
-          $stmt2->bindParam(':iterinary_title',$title);
-          $stmt2->bindParam(':iterinary_id', $id);
-          $stmt2->bindParam(':modified_date', $modified_date);
-          $stmt2->bindParam(':modified_by', $modified_by);
-          $stmt2->bindParam(':status', $status);
+      
+          $query2 = "UPDATE sg_trekiterinarydetails set iterinary_details=:iterinary_details,iterinary_title=:iterinary_title,modified_date=:modified_date,modified_by=:modified_by where iterinary_id =:iterinary_id";
+          $stmt2 = $this->connection->prepare($query2);
+          $stmt2->bindParam(':iterinary_details', $iterinary_details, PDO::PARAM_STR);
+          $stmt2->bindParam(':iterinary_title',$iterinary_title, PDO::PARAM_STR);
+          $stmt2->bindParam(':iterinary_id', $iterinary_id, PDO::PARAM_STR);
+          $stmt2->bindParam(':modified_date', $modified_date, PDO::PARAM_STR);
+          $stmt2->bindParam(':modified_by', $modified_by, PDO::PARAM_STR);
+          
           $res = $stmt2->execute();
-      } 
-      else {
-        $query3 = "INSERT INTO sg_trekiterinarydetails SET iterinary_title=:iterinary_title, iterinary_details=:iterinary_details ,trek_id = :trek_id,created_date = :created_date,created_by=:created_by,recordstatus=:status";
-        $stmt3 = $db->prepare($query3);
-        $stmt3->bindParam(':iterinary_title',$title);
-        $stmt3->bindParam(':iterinary_details', $description);
-        $stmt3->bindParam(':trek_id', $trek_id);
-        $stmt3->bindParam(':created_date', $modified_date);
-        $stmt3->bindParam(':created_by', $modified_by);
-        $stmt3->bindParam(':status', $status);
-        $res = $stmt3->execute();
-      }
+      
       return $res;
     } catch(PDOException $e) {
       $status = array(
@@ -305,6 +296,36 @@ class TreksRepository
                   'status' => "200",
                   'message' => "Success",
                   'trek_details' => $res);
+        return $status;
+      }else{
+        $status = array('status'=>"204",
+         'message'=>"No Data Found");
+        return $status;
+      }
+    } catch(PDOException $e) {
+      $status = array(
+            'status' => "500",
+            'message' => $e->getMessage()
+        );
+      return $status; 
+    }
+  }
+  public function getItineraryTrek($data) {    
+    try {
+      
+      extract($data);
+      
+      $query2 = "SELECT * FROM sg_trekiterinarydetails where trek_id =:trek_id and (recordstatus!='9' or recordstatus IS NULL)";
+      $stmt2 = $this->connection->prepare( $query2 );
+      $stmt2->bindParam(':trek_id', $trekId);
+      $stmt2->execute();
+      $trek_iternerary = $stmt2->fetchAll(PDO::FETCH_OBJ);
+      
+      if(!empty($trek_iternerary)){
+        $status = array(
+                  'status' => "200",
+                  'message' => "Success",
+                  'trek_details' => $trek_iternerary);
         return $status;
       }else{
         $status = array('status'=>"204",
