@@ -30,209 +30,25 @@ final class Treks
   }
   public function addTrek($data) {
     extract($data);
-    if(empty($trekTitle))
+    if(empty($trek_title))
     {
       $status = array(
       'status' => "208",
-      'message' => "Failure trekname is required"
+      'message' => "Failure trekname is required1"
       );
     }else{
-      $trekExist = $this->repository->checkTrekName($trekTitle);
+      $trekExist = $this->repository->checkTrekName($trek_title);
       if($trekExist == '0')
       {
-        if(isset($trekImage['name'])&&!empty($trekImage['name']))
-        {
-          $filedir = UPLOADPATH."treks/"; 
-          $randName = rand(10101010, 9090909090);
-          $newName = "trek_". $randName;
-          $ext = substr($trekImage['name'], strrpos($trekImage['name'], '.') + 1);
-          list($width, $height) = getimagesize($trekImage['tmp_name']); 
-          if(($ext == 'jpg')||($ext=='jpeg')||($ext=='png')||($ext=='gif')){
-            $ImageUpload = new ImageUpload;
-            $ImageUpload->File = $trekImage;
-            $ImageUpload->method = 1;
-            $ImageUpload->SavePath = $filedir;
-            $ImageUpload->NewWidth = $width;
-            $ImageUpload->NewHeight = $height;
-            $ImageUpload->NewName = $newName;
-            $ImageUpload->OverWrite = true;
-            $err = $ImageUpload->UploadFile();
-            $trekImage = $newName.".".strtolower($ext);
-          }
-          else{
-              $status = array(
-                  'status' => "304",
-                  'message' => "Failure Please upload jpg,png,gift,jpeg images only"
-               );
-            return $status;
-          }
-        }
-        if(isset($overviewImage['name'])&&!empty($overviewImage['name'])){
-          $filedir = UPLOADPATH."treks/"; 
-          $randName = rand(10101010, 9090909090);
-          $newName = "trekpagebanner_". $randName;
-          $ext = substr($overviewImage['name'], strrpos($overviewImage['name'], '.') + 1);
-          list($width, $height) = getimagesize($overviewImage['tmp_name']); 
-          if(($ext == 'jpg')||($ext=='jpeg')||($ext=='png')||($ext=='gif')){
-            $ImageUpload = new ImageUpload;
-            $ImageUpload->File = $trekImage;
-            $ImageUpload->method = 1;
-            $ImageUpload->SavePath = $filedir;
-            $ImageUpload->NewWidth = $width;
-            $ImageUpload->NewHeight = $height;
-            $ImageUpload->NewName = $newName;
-            $ImageUpload->OverWrite = true;
-            $err = $ImageUpload->UploadFile();
-            $overviewImage = $newName.".".strtolower($ext);
-          }
-          else{
-            $status = array(
-              'status' => "304",
-              'message' => "Failure Please upload jpg,png,gift,jpeg images only"
-            );
-            return $status;
-          }
-        }
-        $created_date = date("Y-m-d H:i:s");
-        $data['trekImage'] = $trekImage;
-        $data['overviewImage'] = $overviewImage;
-        $data['createdDate'] = $created_date;
+        
+        
         $trekId = $this->repository->insertTrek($data);
-        if(!empty($trekId)){          
-          $count = 0;
-          $data1['description'] = $description;
-          $data1['title'] = @$title;
-          foreach($data1 as $value){
-            $count = sizeof($value); 
-          } 
-          for($x = 0;$x < $count;$x++){
-            $data1['trekId'] = $trekId;
-            $data1['description'] = $description[$x];
-            $data1['title'] = @$title[$x];
-            $data1['createdDate'] = $created_date;
-            $data1['createdBy'] = $created_by;
-            $data1['status'] = $status;
-            $iterinary = $this->repository->addTrekIterinaryDetails($data1);
-          }
-          if(isset($pumpupImage['name'])&&!empty($pumpupImage['name'])){
-            $filedir = UPLOADPATH."treks/food/"; 
-            $randName = rand(10101010, 9090909090);
-            $newName = "trekpumpup_". $randName;
-            $ext = substr($pumpupImage['name'], strrpos($pumpupImage['name'], '.') + 1);
-            if(($ext == 'jpg')||($ext=='jpeg')||($ext=='png')||($ext=='gif')){
-              list($width, $height) = getimagesize($pumpupImage['tmp_name']); 
-              $ImageUpload = new ImageUpload;
-              $ImageUpload->File = $pumpupImage;
-              $ImageUpload->method = 1;
-              $ImageUpload->SavePath = $filedir;
-              $ImageUpload->NewWidth = $width;
-              $ImageUpload->NewHeight = $height;
-              $ImageUpload->NewName = $newName;
-              $ImageUpload->OverWrite = true;
-              $err = $ImageUpload->UploadFile();
-              $pumpupImage = $newName.".".strtolower($ext);
-            }else{
-              $status = array(
-                  'status' => "304",
-                  'message' => "Failure Please upload jpg,png,gift,jpeg images only"
-               );
-              return $status;
-            }
-          }
-          if(isset($bfImage['name'])&&!empty($bfImage['name'])){
-            $filedir = UPLOADPATH."treks/food/"; 
-            $randName = rand(10101010, 9090909090);
-            $newName = "trekbf_". $randName;
-            $ext = substr($bfImage['name'], strrpos($bfImage['name'], '.') + 1);
-            list($width, $height) = getimagesize($bfImage['tmp_name']);
-            if(($ext == 'jpg')||($ext=='jpeg')||($ext=='png')||($ext=='gif')){ 
-              $ImageUpload = new ImageUpload;
-              $ImageUpload->File = $bfImage;
-              $ImageUpload->method = 1;
-              $ImageUpload->SavePath = $filedir;
-              $ImageUpload->NewWidth = $width;
-              $ImageUpload->NewHeight = $height;
-              $ImageUpload->NewName = $newName;
-              $ImageUpload->OverWrite = true;
-              $err = $ImageUpload->UploadFile();
-              $bfImage = $newName.".".strtolower($ext);
-            }
-            else{
-              $status = array(
-                  'status' => "304",
-                  'message' => "Failure Please upload jpg,png,gift,jpeg images only"
-               );
-              return $status;
-            }
-          }
-          if(isset($lunchImage['name'])&&!empty($lunchImage['name'])){
-            $filedir = UPLOADPATH."treks/food/"; 
-            $randName = rand(10101010, 9090909090);
-            $newName = "treklunchImage_". $randName;
-            $ext = substr($lunchImage['name'], strrpos($lunchImage['name'], '.') + 1);
-            if(($ext == 'jpg')||($ext=='jpeg')||($ext=='png')||($ext=='gif')){
-              list($width, $height) = getimagesize($lunchImage['tmp_name']); 
-              $ImageUpload = new ImageUpload;
-              $ImageUpload->File = $lunchImage;
-              $ImageUpload->method = 1;
-              $ImageUpload->SavePath = $filedir;
-              $ImageUpload->NewWidth = $width;
-              $ImageUpload->NewHeight = $height;
-              $ImageUpload->NewName = $newName;
-              $ImageUpload->OverWrite = true;
-              $err = $ImageUpload->UploadFile();
-              $lunchImage = $newName.".".strtolower($ext);
-            }
-            else{
-              $status = array(
-                  'status' => "304",
-                  'message' => "Failure Please upload jpg,png,gift,jpeg images only"
-               );
-              return $status;
-            }
-          }
-          if(isset($evngImage['name'])&&!empty($evngImage['name'])){
-            $filedir = UPLOADPATH."treks/food/"; 
-            $randName = rand(10101010, 9090909090);
-            $newName = "trekevngImage_". $randName;
-            $ext = substr($evngImage['name'], strrpos($evngImage['name'], '.') + 1);
-            if(($ext == 'jpg')||($ext=='jpeg')||($ext=='png')||($ext=='gif')){
-              list($width, $height) = getimagesize($evngImage['tmp_name']); 
-              $ImageUpload = new ImageUpload;
-              $ImageUpload->File = $evngImage;
-              $ImageUpload->method = 1;
-              $ImageUpload->SavePath = $filedir;
-              $ImageUpload->NewWidth = $width;
-              $ImageUpload->NewHeight = $height;
-              $ImageUpload->NewName = $newName;
-              $ImageUpload->OverWrite = true;
-              $err = $ImageUpload->UploadFile();
-              $evngImage = $newName.".".strtolower($ext);
-            }
-            else{
-              $status = array(
-                  'status' => "304",
-                  'message' => "Failure Please upload jpg,png,gift,jpeg images only"
-               );
-              return $status;
-            }
-          }
-          $data['pumpupImage'] = $pumpupImage;
-          $data['bfImage'] = $bfImage;
-          $data['lunchImage'] = $lunchImage;
-          $data['evngImage'] = $evngImage;
-          $data['trekId'] = $trekId;
-          $foodMenu = $this->repository->addTrekFoodmenu($data);
-          $status = array(
-                    'status' => "200",
-                    'message' => "Treks Details Added Successfully",
-                    'trek_id' => $trekId
-                    );
-        } else {
-          $status = array(
-                    'status' => "304",
-                    'message' => "Treks Details Not Added Successfully");
-        }
+         if($trekId){
+           $status = array(
+              'status' => "200",
+              'message' => "Inserted Successfully"
+           );
+         }
       }
       else{
         $status = array(

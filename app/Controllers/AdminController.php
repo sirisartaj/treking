@@ -38,37 +38,60 @@ class AdminController extends Controller
 
     public function storetrek()
     {
-       // print_r($this->request->getVar());exit;
+      
         helper(['form']);
        $rules = [
-            'trek_mobile'          => 'required|min_length[10]|max_length[15]',
-            'trek_email'         => 'required|min_length[4]|max_length[100]|valid_email|is_unique[sg_treks.trek_email]',
-            'trek_password'      => 'required|min_length[4]|max_length[50]',
-            'cpassword'  => 'matches[trek_password]'
+            'trek_fee'      => 'required',
+            'trek_days'      => 'required',
+            'trek_title'      => 'required|is_unique[sg_trekingdetails.trek_title]'
         ];
-          
+        
         if($this->validate($rules)){ 
             $TrekModel = new TrekModel();
+            $trek_overview = str_replace('"','\'', $this->request->getVar('trek_overview'));
+            $things_carry = str_replace('"','\'', $this->request->getVar('things_carry'));
+            $terms = str_replace('"','\'', $this->request->getVar('terms'));
+            $mapimage = str_replace('"','\'', $this->request->getVar('map_image'));
             $data = [
-                'trek_mobile'     => $this->request->getVar('trek_mobile'),
-                'trek_email'    => $this->request->getVar('trek_email'),
-                'trek_password' => password_hash($this->request->getVar('trek_password'), PASSWORD_DEFAULT),
-                'trek_fname' =>$this->request->getVar('trek_fname'),
-                'trek_lname' =>$this->request->getVar('trek_lname'),
-                'trek_gender' =>$this->request->getVar('trek_gender'),
-                'trek_dob' =>$this->request->getVar('trek_dob'),
-                'trek_level' =>$this->request->getVar('trek_level'),
-                'trek_create' =>date('Y-m-d H:i:s'),
-                'trek_status' =>0
+                'trek_title'     => $this->request->getVar('trek_title'),
+                'trek_fee'    => $this->request->getVar('trek_fee'),                
+                'trek_days' =>$this->request->getVar('trek_days'),
+                'trek_overview'=> htmlspecialchars($trek_overview, ENT_QUOTES),
+                'things_carry' => htmlspecialchars($things_carry, ENT_QUOTES),
+                'terms' => htmlspecialchars($terms, ENT_QUOTES),
+                'map_image' => htmlspecialchars($mapimage, ENT_QUOTES),
+                'created_date' =>date('Y-m-d H:i:s'),
+                'created_by' =>1,
+                'status' =>0
             ];
 
             $a = $TrekModel->addtrek($data);
-           // print_r($a);exit;
-            $_SESSION['message'] = $a->message;
-            return redirect()->to('addtrek');
+            //print_r($a);exit;
+            if($a->status ==200){
+                $_SESSION['message'] = $a->message;
+                return redirect()->to('addTrek');
+            }else{
+                
+                $data['validation'] = $this->validator;
+                echo view('treking\addtrek', $data);
+            }
+            
         }else{
             $data['validation'] = $this->validator;
-            echo view('addtrek_view', $data);
+            echo view('treking\addtrek', $data);
+        }
+    }
+
+    public function addTrek(){
+        helper(['form']);
+        $rules = [ ];
+        
+        if($this->validate($rules)){ 
+
+         }else{
+            $data['validation'] = $this->validator;
+        
+            echo view('treking\addtrek',$data);
         }
     }
 
@@ -79,17 +102,9 @@ class AdminController extends Controller
         $rules = [
             'trek_id'      => 'required'
         ];
-        //print_r($this->request->getVar());
-      //echo "nnnn";  echo($this->validate($rules));
-
-        //echo "sdcsd";exit;
-//echo strip_tags($this->request->getVar('trek_overview'));
-       // exit;
-       
           
         if($this->validate($rules)){ 
-            htmlspecialchars("<b>using htmlspecialchars()
-                            function</b>", ENT_QUOTES);
+            
 
             $trek_overview = str_replace('"','\'', $this->request->getVar('trek_overview'));
             $things_carry = str_replace('"','\'', $this->request->getVar('things_carry'));
@@ -108,7 +123,7 @@ class AdminController extends Controller
             ];
            
            $a = $TrekModel->edittrekdata($data);
-           //print_r($a);exit;
+           
             return redirect()->to('/trekslist');
         }else{
             $rules = [];

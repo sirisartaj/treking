@@ -44,8 +44,10 @@ $routes->get('/', 'SigninController::index');
 $routes->get('/trekslist', 'AdminController::trekslist');
 $routes->get('/trekitinerary', 'AdminController::trekitinerary');
 $routes->get('/getfaq/(:any)', 'AdminController::getfaq/$1');
+$routes->get('/addTrek', 'AdminController::addTrek');
 $routes->get('/gettrek/(:any)', 'AdminController::gettrek/$1');
 $routes->post('/edittrek', 'AdminController::edittrek');
+$routes->post('/storetrek', 'AdminController::storetrek');
 $routes->post('/fileupload', 'AdminController::fileupload');
 
 

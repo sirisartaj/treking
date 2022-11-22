@@ -46,39 +46,34 @@ class TreksRepository
   }
   public function insertTrek($data) {
     try {
-      extract($data);
-      $sql = "INSERT INTO sg_trekingdetails (trek_title, trek_fee, visit_time, time_visit, trek_overview, trek_days, trek_nights, region, trekvideo_title, trekvideo_url, season, things_carry, overview_image, trek_image, gst, map_image, temperature, terms, faq, popular_trek, meta_title, meta_desc, altitude, status, created_date, created_by)VALUES(:trek_title, :trek_fee, :difficult, :time_visit, :trek_overview, :trek_days, :trek_nights, :region, :trekvideo_title, :trekvideo_url, :season, :things_carry, :overview_image, :trek_image, :gst, :map_image, :temperature, :terms, :faq, :popular_trek, :meta_title, :meta_desc, :altitude, :status, :created_date, :created_by)";
-      $stmt = $this->connection->prepare($sql);         
-      $season_details = implode(",",$season);
-      $stmt->bindParam(':trek_title', $trekTitle);
-      $stmt->bindParam(':trek_fee', $trekFee);
-      $stmt->bindParam(':difficult', $difficult);
-      $stmt->bindParam(':time_visit',$timeVisit);
-      $stmt->bindParam(':trek_overview',$trekOverview);
-      $stmt->bindParam(':trek_days', $trekDays);
-      $stmt->bindParam(':trek_nights', $trekNights);
-      $stmt->bindParam(':region', $region);
-      $stmt->bindParam(':trekvideo_title', $trekVideoTitle);
-      $stmt->bindParam(':trekvideo_url', $trekVideoUrl);
-      $stmt->bindParam(':season',$seasonDetails);
-      $stmt->bindParam(':things_carry', $thingsCarry);
-      $stmt->bindParam(':trek_image', $trekImage);
-      $stmt->bindParam(':overview_image', $overviewImage);
-      $stmt->bindParam(':gst', $gst);
-      $stmt->bindParam(':map_image', $mapImage);
-      $stmt->bindParam(':terms', $terms);
-      $stmt->bindParam('faq',$faq);
-      $stmt->bindParam(':popular_trek', $popularTrek);
-      $stmt->bindParam(':temperature',$temperature);
-      $stmt->bindParam(':meta_title',$metaTitle);
-      $stmt->bindParam(':meta_desc',$metaDesc);
-      $stmt->bindParam(':altitude',$altitude);
+        extract($data);
+      $trek_overview = addslashes($trek_overview);
+      $things_carry = addslashes($things_carry);
+      $terms = addslashes($terms);
+      $map_image = addslashes($map_image);
+      
+      $sql = "INSERT INTO sg_trekingdetails (trek_title, trek_fee, trek_overview, trek_days,things_carry, map_image,terms, status, created_date, created_by)VALUES(:trek_title, :trek_fee,:trek_overview, :trek_days,:things_carry,:map_image, :terms, :status, :created_date, :created_by)";
+      $stmt = $this->connection->prepare($sql);
+
+      $stmt->bindParam(':trek_title', $trek_title, PDO::PARAM_STR);
+      $stmt->bindParam(':trek_fee', $trek_fee,PDO::PARAM_STR);
+      $stmt->bindParam(':trek_overview',$trek_overview, PDO::PARAM_STR);
+      $stmt->bindParam(':trek_days', $trek_days,PDO::PARAM_STR);
+      $stmt->bindParam(':things_carry', $things_carry, PDO::PARAM_STR);
+      $stmt->bindParam(':map_image', $map_image, PDO::PARAM_STR);
+      $stmt->bindParam(':terms', $terms, PDO::PARAM_STR);      
       $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':created_date' , $createdDate);
-      $stmt->bindParam(':created_by' , $createdBy);
+      $stmt->bindParam(':created_date' , $created_date,PDO::PARAM_STR);
+      $stmt->bindParam(':created_by' , $created_by);
       $stmt->execute();
-      $trek_id = $this->connection->lastInsertId();
-      return $trek_id;     
+      return $trek_id = $this->connection->lastInsertId();
+      /*if($trek_id){  
+         $status = array(
+              'status' => "200",
+              'message' => "Trek Inserted"
+          );
+        return $status;
+      }*/
     } catch(PDOException $e) {
       $status = array(
               'status' => "500",

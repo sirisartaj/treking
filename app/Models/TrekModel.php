@@ -53,6 +53,13 @@ class TrekModel extends Model{
        return $home->CallAPI('POST',$url,$data);          
     }
 
+    public function addtrek($data){           
+        $home = new home();   
+        //print_r(json_encode($data));exit;     
+       $url = baseURL1.'/treks/addtrek';//exit;
+       return $home->CallAPI('POST',$url,$data);          
+    }
+
     public function getfaq($trek_id){
        
         $home = new home();

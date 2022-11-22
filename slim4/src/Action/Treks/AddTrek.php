@@ -8,21 +8,21 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AddTrek
 {
-  private $treks;
-  public function __construct(Treks $treks)
+  private $Treks;
+  public function __construct(Treks $Treks)
   {
-    $this->treks = $treks;
+    $this->Treks = $Treks;
   }
   public function __invoke(
       ServerRequestInterface $request, 
       ResponseInterface $response
   ): ResponseInterface 
   {
-     // $data = $request->getParsedBody();
-    // $data =(array) json_decode($data);
-    $data = array_merge($_POST, $_FILES);
-    $treks = $this->treks->addTrek($data);
-    $response->getBody()->write((string)json_encode($treks));
+      $data = $request->getBody();
+     $data =(array) json_decode($data);
+    //$data = array_merge($_POST, $_FILES);
+    $Treks = $this->Treks->addTrek($data);
+    $response->getBody()->write((string)json_encode($Treks));
     return $response
           ->withHeader('Content-Type', 'application/json');
   }
