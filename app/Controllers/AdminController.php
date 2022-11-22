@@ -88,22 +88,28 @@ class AdminController extends Controller
        
           
         if($this->validate($rules)){ 
-            
+            htmlspecialchars("<b>using htmlspecialchars()
+                            function</b>", ENT_QUOTES);
+
+            $trek_overview = str_replace('"','\'', $this->request->getVar('trek_overview'));
+            $things_carry = str_replace('"','\'', $this->request->getVar('things_carry'));
+            $terms = str_replace('"','\'', $this->request->getVar('terms'));
+            $mapimage = str_replace('"','\'', $this->request->getVar('map_image'));
             $data = [
                 'trek_id'    => $this->request->getVar('trek_id'),
                 'trek_title'    => $this->request->getVar('trek_title'),
-                'trek_overview'=> strip_tags($this->request->getVar('trek_overview')),
-                'things_carry' => strip_tags($this->request->getVar('things_carry')),
-                'terms' => strip_tags($this->request->getVar('terms')),
-                'map_image' => strip_tags($this->request->getVar('map_image')) ,
+                'trek_overview'=> htmlspecialchars($trek_overview, ENT_QUOTES),
+                'things_carry' => htmlspecialchars($things_carry, ENT_QUOTES),
+                'terms' => htmlspecialchars($terms, ENT_QUOTES),
+                'map_image' => htmlspecialchars($mapimage, ENT_QUOTES),
                 'modified_date' =>date('Y-m-d H:i:s'),
                 'modified_by' =>1,
 
             ];
-//print_r($data);echo "jjg";exit;
+           
            $a = $TrekModel->edittrekdata($data);
-           print_r($a);exit;
-            return redirect()->to('/gettreks');
+           //print_r($a);exit;
+            return redirect()->to('/trekslist');
         }else{
             $rules = [];
             $trek = (array) $TrekModel->getTrek($trek_id);           
@@ -152,6 +158,7 @@ class AdminController extends Controller
     function fileupload(){
       
         $file = $this->request->getFile('file');
+        $foldername = $this->request->getvar('foldername');
        if ($file) {
           if (!$_FILES['file']['error']) {
             $name = md5(rand(100, 200));

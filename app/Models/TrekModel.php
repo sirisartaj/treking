@@ -48,8 +48,8 @@ class TrekModel extends Model{
 
     public function edittrekdata($data){           
         $home = new home();   
-        print_r(json_encode($data));//exit;     
-       echo  $url = baseURL1.'/treks/updatetrek';exit;
+        //print_r(json_encode($data));exit;     
+       $url = baseURL1.'/treks/updatetrek';//exit;
        return $home->CallAPI('POST',$url,$data);          
     }
 

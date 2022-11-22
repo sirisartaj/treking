@@ -154,11 +154,16 @@ class TreksRepository
     try {
       //print_r($data);exit;
       extract($data);
+      $trek_overview = addslashes($trek_overview);
+      $things_carry = addslashes($things_carry);
+      $terms = addslashes($terms);
+      $map_image = addslashes($map_image);
       $query = "UPDATE `sg_trekingdetails`  SET trek_title='".$trek_title."' , trek_overview = '".$trek_overview."',things_carry = '".$things_carry."', terms = '".$terms."',modified_date = '".$modified_date."',modified_by='".$modified_by."', map_image ='".$map_image."' WHERE trek_id =:trek_id";
      //exit;
       $stmt = $this->connection->prepare($query);      
       $stmt->bindParam(':trek_id',$trek_id);
       $res = $stmt->execute();
+
       if($res){
         $status = array(
               'status' => "200",
