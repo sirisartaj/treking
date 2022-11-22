@@ -247,7 +247,7 @@ class AdminController extends Controller
 
 
             
-            print_r($a);exit;
+           // print_r($a);exit;
             if($a){
                 $_SESSION['message'] = $a->message;
                 return redirect()->to('/trekslist');
