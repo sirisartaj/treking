@@ -53,42 +53,6 @@ $routes->post('/trekiterinarystore', 'AdminController::trekiterinarystore');
 $routes->post('/fileupload', 'AdminController::fileupload');
 
 
-$routes->get('/signup', 'SignupController::index');
-$routes->match(['get', 'post'], 'SignupController/store', 'SignupController::store');
-$routes->match(['get', 'post'], 'SigninController/loginAuth', 'SigninController::loginAuth');
-$routes->get('/signin', 'SigninController::index');
-$routes->get('/profile', 'ProfileController::index',['filter' => 'authGuard']);
-$routes->get('logout', 'SigninController::logout');
-$routes->get('feedbackform/(:any)', 'feedbackController::userfeedbackform/$1');
-$routes->get('addqfeedback', 'feedbackController::addquestionstofeedbackform');
-$routes->post('submitquestion', 'feedbackController::qstore');
-$routes->get('showfeedbackform/(:any)', 'feedbackController::showquestionstofeedbackform/$1');
-$routes->post('savefeedback', 'feedbackController::saveuserfeedback');
-$routes->post('feebackreport', 'feedbackController::feebackreport');
-
-
-
-$routes->get('/adduser', 'ProfileController::adduser');
-$routes->get('/getuser/(:any)', 'ProfileController::getuser/$1');//for edit user
-$routes->get('/changepassword/(:any)', 'ProfileController::changepassword/$1');
-$routes->get('/getusers', 'ProfileController::getusers');
-$routes->post('storeuser', 'ProfileController::storeuser');
-$routes->post('changepwd', 'ProfileController::changepwd');
-$routes->post('edituserstore', 'ProfileController::edituserstore');
-
-
-$routes->get('/addrole', 'RoleController::addrole');
-$routes->post('storerole', 'RoleController::storerole');
-$routes->get('/getrole/(:any)', 'RoleController::getrole/$1');
-$routes->post('editrolestore', 'RoleController::editrolestore');
-$routes->get('/getroles', 'RoleController::index');
-$routes->get('/roleprivilies/(:any)', 'RoleController::roleprivilies/$1');
-$routes->post('/rolepriviliesstore', 'RoleController::rolepriviliesstore');
-
-
-
-
-
 /*
  * --------------------------------------------------------------------
  * Additional Routing
