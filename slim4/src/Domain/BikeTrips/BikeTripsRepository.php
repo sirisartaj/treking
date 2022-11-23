@@ -91,13 +91,14 @@ class BikeTripsRepository
   public function addTripIterinaryDetails($data) {
     try {
       extract($data);
-      $query2 = "INSERT INTO sg_tripitinerary SET title=:title,description=:description,trip_id=:trip_id,created_date =:created_date,created_by=:created_by";
-      $stmt2 = $this->connection->prepare($query2);
-      $stmt2->bindParam(':title',  $title);
-      $stmt2->bindParam(':description',$description);
-      $stmt2->bindParam(':trip_id',$trip_id);
-      $stmt2->bindParam(':created_date', $createdDate);
-      $stmt2->bindParam(':created_by', $createdBy);
+       $query2 = "INSERT INTO sg_biketrip_iterinary_details (iterinary_title,iterinary_details,biketrips_id,created_date,created_by,recordstatus) VALUES ('".$iterinary_title."','".$iterinary_details."','".$biketrips_id."','".$created_date."','".$created_by."','0')";
+		//exit;
+	 $stmt2 = $this->connection->prepare($query2);
+      $stmt2->bindParam(':iterinary_title',  $iterinary_title, PDO::PARAM_STR);
+      $stmt2->bindParam(':iterinary_details',$iterinary_details, PDO::PARAM_STR);
+      $stmt2->bindParam(':biketrips_id',$biketrips_id, PDO::PARAM_STR);
+      $stmt2->bindParam(':created_date', $created_date, PDO::PARAM_STR);
+      $stmt2->bindParam(':created_by', $created_by, PDO::PARAM_STR);
       return $stmt2->execute();
     }catch(PDOException $e) {
       $status = array(
@@ -118,39 +119,25 @@ class BikeTripsRepository
   }
   public function updateTrip($data) {
     try {
+		//print_r($data);exit;
       extract($data);
-      $query  =  "UPDATE sg_biketrips SET trip_title=:trip_title,trip_days=:trip_days , trip_nights = :trip_nights, trip_fee = :trip_fee , trip_image = :trip_image , trip_pagebanner  = :trip_pagebanner, difficulty = :difficulty, region = :region , tripvideo_url = 
-         :tripvideo_url, tripvideo_title = :tripvideo_title, season = :season ,spoc_name = :spoc_name,spoc_email = :spoc_emailid,spoc_designation = :spoc_designation,trip_overview = :overview,things_carry = :things_carry,faq=:faq,terms_conditions = :terms_conditions,how_to_reach = :how_to_reach,altitude = :altitude , visit_time = :visit_time ,temparature = :temparature ,popular_trips = :popular_trips,status = :status,modified_date = :modified_date,modified_by = :modified_by WHERE biketrips_id = :biketrips_id";
+      $query  =  "UPDATE sg_biketrips SET trip_title=:trip_title,trip_overview = :trip_overview,things_carry = :things_carry,terms_conditions = :terms_conditions,how_to_reach = :how_to_reach,status = :status,modified_date = :modified_date,modified_by = :modified_by WHERE biketrips_id = :biketrips_id";
       $stmt = $this->connection->prepare($query);  
       $modified_date = date("Y-m-d H:i:s");
-      $stmt->bindParam(':trip_title', $tripTitle);
-      $stmt->bindParam(':trip_days', $tripDays);
-      $stmt->bindParam(':trip_nights', $tripNights);
-      $stmt->bindParam(':trip_fee', $tripFee);
-      $stmt->bindParam(':trip_image',$biketripImage);
-      $stmt->bindParam(':trip_pagebanner', $tripPagebanner);
-      $stmt->bindParam(':difficulty', $difficulty);
-      $stmt->bindParam(':region', $region);
-      $stmt->bindParam(':tripvideo_url', $tripvideoUrl);
-      $stmt->bindParam(':tripvideo_title', $tripvideoTitle);
-      $stmt->bindParam(':season', $season);
-      $stmt->bindParam(':spoc_name', $spocName);
-      $stmt->bindParam(':spoc_emailid', $spocEmailid);
-      $stmt->bindParam(':spoc_designation', $spocDesignation);
-      $stmt->bindParam(':overview', $overview);
-      $stmt->bindParam(':things_carry', $thingsCarry);
-      $stmt->bindParam(':terms_conditions', $termsConditions);
-      $stmt->bindParam(':faq',$faq);
-      $stmt->bindParam(':how_to_reach', $howToReach);
-      $stmt->bindParam(':altitude', $altitude);
-      $stmt->bindParam(':visit_time', $visitTime);
-      $stmt->bindParam(':temparature', $temparature);
-      $stmt->bindParam(':popular_trips', $popularTrips);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':modified_date', $modifiedDate);
-      $stmt->bindParam(':modified_by', $modifiedBy);
-      $stmt->bindParam(':biketrips_id',$biketripsId);
-      return $res = $stmt->execute();
+	  $status = "0";
+      $stmt->bindParam(':trip_title', $trip_title);
+      $stmt->bindParam(':trip_overview', $trip_overview);
+      $stmt->bindParam(':things_carry', $things_carry);
+      $stmt->bindParam(':terms_conditions', $terms_conditions);
+      $stmt->bindParam(':how_to_reach', $how_to_reach);
+      $stmt->bindParam(':modified_date', $modified_date);
+      $stmt->bindParam(':modified_by', $modified_by);
+      $stmt->bindParam(':biketrips_id',$biketrips_id);
+      $stmt->bindParam(':status',$status);
+       
+	  return $res = $stmt->execute();
+	  
+	  
     }catch(PDOException $e) {
       $status = array(
               'status' => "500",
@@ -159,27 +146,61 @@ class BikeTripsRepository
       return $status;
     }
   }
+  public function getItineraryBikeTrip($data){
+	  try {
+		  //print_r($data);exit;
+      extract($data);
+      
+      $query2 = "SELECT * FROM sg_biketrip_iterinary_details where biketrips_id = :biketrips_id";
+      $stmt2 = $this->connection->prepare( $query2 );
+      $stmt2->bindParam(':biketrips_id',$tripId);
+      $stmt2->execute();
+      $res = $stmt2->fetchAll(PDO::FETCH_OBJ);
+      if(!empty($res)){
+        $status = array(
+                  'status' => ERR_OK,
+                  'message' => "Success",
+                  'biketrip' => $res);
+        return $status;
+      }else{
+        $status = array('status'=>"204",
+         'message'=>"No Data Found");
+        return $status;
+      }
+    } catch(PDOException $e) {
+      $status = array(
+            'status' => "500",
+            'message' => $e->getMessage()
+        );
+      return $status; 
+    }
+  }
   public function updateTripIterinaryDetails($data) {
     try {
+		//print_r($data);exit;
       extract($data);
-      if(@$data['id']){
-        $query2 = "UPDATE sg_tripitinerary SET title=:title, description=:description,modified_date=:modified_date,modified_by=:modified_by where  tripitinerary_id = :tripitinerary_id";
+      if(@$data['iterinary_id']){
+		 // echo "dsdsd";exit;
+      $query2 = "UPDATE sg_biketrip_iterinary_details SET iterinary_title='".$iterinary_title."', iterinary_details='".$iterinary_details."',modified_date='".$modified_date."',modified_by='".$modified_by."' where  iterinary_id  = '".$iterinary_id."' ";
         $stmt2 = $this->connection->prepare($query2);
-        $stmt2->bindParam(':title', $title);
-        $stmt2->bindParam(':description', $description);
-        $stmt2->bindParam(':tripitinerary_id', $id);
-        $stmt2->bindParam(':modified_date',$modifiedDate);
-        $stmt2->bindParam(':modified_by',$modifiedBy);
+        $stmt2->bindParam(':iterinary_title', $iterinary_title, PDO::PARAM_STR);
+        $stmt2->bindParam(':iterinary_details', $iterinary_details, PDO::PARAM_STR);
+        $stmt2->bindParam(':iterinary_id ', $iterinary_id , PDO::PARAM_STR);
+        $stmt2->bindParam(':modified_date',$modified_date, PDO::PARAM_STR);
+        $stmt2->bindParam(':modified_by',$modified_by, PDO::PARAM_STR);
+        //$stmt2->bindParam(':biketrips_id',$biketrips_id);
         $res = $stmt2->execute();
+		
       } 
       else {
-        $query3 = "INSERT INTO sg_tripitinerary SET title=:title, description=:description , trip_id = :trip_id,created_date = :created_date,created_by=:created_by";
-        $stmt3 = $db->prepare($query3);
-        $stmt3->bindParam(':title',$title);
-        $stmt3->bindParam(':iterinary_details', $description);
-        $stmt3->bindParam(':trip_id', $biketripsId);
-        $stmt3->bindParam(':created_date',$modifiedDate);
-        $stmt3->bindParam(':created_by',$modifiedBy);
+		   $query3 = "INSERT INTO sg_biketrip_iterinary_details (iterinary_title,iterinary_details,biketrips_id,created_date,created_by,recordstatus) VALUES ('".$iterinary_title."','".$iterinary_details."','".$biketrips_id."','".$created_date."','".$created_by."','0')";
+        
+        $stmt3 = $this->connection->prepare($query3);
+        $stmt3->bindParam(':iterinary_title',$iterinary_title, PDO::PARAM_STR);
+        $stmt3->bindParam(':iterinary_details', $iterinary_details, PDO::PARAM_STR);
+        $stmt3->bindParam(':biketrips_id', $biketrips_id, PDO::PARAM_STR);
+        $stmt3->bindParam(':created_date',$created_date, PDO::PARAM_STR);
+        $stmt3->bindParam(':created_by',$created_by, PDO::PARAM_STR);
         $res = $stmt3->execute();
       }
       return $res;
@@ -213,13 +234,14 @@ class BikeTripsRepository
   }
   public function getBikeTrip($data) {    
     try {
+		//print_r($data);exit;
       extract($data);
       $query = "SELECT `biketrips_id` AS tripId, `trip_title` AS tripTitle, `trip_days` AS tripDays, `trip_nights` AS tripNights, `trip_fee` AS tripFee, CONCAT('".UPLOADURL."biketrips/', `trip_image`) AS tripImage, `difficulty`, `region`, `tripvideo_url` AS tripvideoUrl, `tripvideo_title` AS tripvideoTitle, `season`, `popular_trips` AS popularTrips, `spoc_name` AS spocName, `spoc_mobile` AS spocMobile, `spoc_email` AS spocEmail, `spoc_designation` AS spocDesignation, `trip_overview` AS tripOverview, `things_carry` AS thingsCarry, `terms_conditions` AS termsConditions, `how_to_reach` AS howToReach, `faq`, `altitude`, `visit_time` AS visitTime, `temparature`, `status`, `created_date` AS createdDate, `modified_date` AS modifiedDate, `created_by` AS createdBy, `modified_by` AS modifiedBy, CONCAT('".UPLOADURL."biketrips/', `trip_pagebanner`) AS tripPagebanner, trip_discount AS tripDiscount FROM sg_biketrips WHERE biketrips_id=:biketrip_id";
       $stmt = $this->connection->prepare( $query );
       $stmt->bindParam(':biketrip_id', $tripId);
       $stmt->execute();
       $res['trips'] = $stmt->fetch(PDO::FETCH_OBJ);
-      $query2 = "SELECT * FROM sg_tripitinerary where trip_id = :biketrips_id";
+      $query2 = "SELECT * FROM sg_biketrip_iterinary_details where biketrips_id = :biketrips_id";
       $stmt2 = $this->connection->prepare( $query2 );
       $stmt2->bindParam(':biketrips_id',$tripId);
       $stmt2->execute();

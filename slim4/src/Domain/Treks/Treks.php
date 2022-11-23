@@ -83,7 +83,7 @@ final class Treks
   }
 
   public function editTrekIterinary($data) {
-    
+
     extract($data);
     if(empty($iterinary_title))
     {
@@ -128,6 +128,10 @@ final class Treks
   
   public function deleteTrek($data) {
     $trek = $this->repository->deleteTrek($data);
+    return $trek;
+  }
+  public function deleteItineraryTrek($data) {
+    $trek = $this->repository->updateTrekIterinaryStatus($data);
     return $trek;
   }
   public function getBatches($data) {

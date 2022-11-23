@@ -1,25 +1,28 @@
 <?php
 
-namespace App\Action\Treks;
+namespace App\Action\Expeditions;
 
-use App\Domain\Treks\Treks;
+use App\Domain\Expeditions\Expeditions;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DeleteTrek
+final class DeleteExpedition
 {
-  private $treks;
-  public function __construct(Treks $treks)
+  private $Expeditions;
+  public function __construct(Expeditions $Expeditions)
   {
-    $this->treks = $treks;
+    $this->Expeditions = $Expeditions;
   }
   public function __invoke(
       ServerRequestInterface $request, 
       ResponseInterface $response, $args
   ): ResponseInterface 
   {
-    $treks = $this->treks->deleteTrek($args);
-    $response->getBody()->write((string)json_encode($treks));
+    $data = $request->getBody();
+    $data =(array) json_decode($data);
+    
+    $Expeditions = $this->Expeditions->deleteExpedition($data);
+    $response->getBody()->write((string)json_encode($Expeditions));
     return $response
           ->withHeader('Content-Type', 'application/json');
   }

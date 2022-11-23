@@ -51,51 +51,24 @@ class LeisurePackagesRepository
   }
   public function addLeisurePackage($data) {
     try {
+		//print_r($data);exit;
       extract($data);
-      $query = "INSERT INTO sg_leisurepackages(pkg_name, pkg_days, pkg_nights, suitable_for, single_price, couple_price, family_price, pkg_image, pkg_pagebanner, pkg_overview, pkg_activities, hotel_name, hotel_image, hotel_location,inclusion_exclusion,      where_report, terms_conditions, faq, popular_pkg, status, created_date, created_by) VALUES (:pkg_name, :pkg_days, :pkg_nights, :suitable_for, :single_price, :couple_price, :family_price, :pkg_image, :pkg_pagebanner, :pkg_overview, :pkg_activities, :hotel_name, :hotel_image, :hotel_location, :inclusion_exclusion, :where_report, :terms_conditions, :faq, :popular_pkg, :status, :created_date, :created_by)";
+      $query = "INSERT INTO sg_leisurepackages(pkg_name, pkg_days,pkg_overview,inclusion_exclusion,where_report,terms_conditions, status, created_date, created_by) VALUES (:pkg_name, :pkg_days, :pkg_overview,:inclusion_exclusion, :where_report, :terms_conditions, :status, :created_date, :created_by)";
       $stmt = $this->connection->prepare($query);
       $created_date = date("Y-m-d H:i:s");
-      $stmt->bindParam(':pkg_name', $pkgName);
-      $stmt->bindParam(':pkg_days', $pkgDays);
-      $stmt->bindParam(':pkg_nights', $pkgNights);
-      $stmt->bindParam(':suitable_for', $suitableFor);
-      $stmt->bindParam(':single_price',$singlePrice);
-      $stmt->bindParam(':couple_price', $couplePrice);
-      $stmt->bindParam(':family_price', $familyPrice);
-      $stmt->bindParam(':pkg_image', $packageImage);
-      $stmt->bindParam(':pkg_pagebanner',$pkgPagebanner);
-      $stmt->bindParam(':pkg_overview', $pkgOverview);
-      $stmt->bindParam(':pkg_activities', $pkgActivities);
-      $stmt->bindParam(':hotel_name', $hotelName);
-      $stmt->bindParam(':hotel_image', $hotelImage);
-      $stmt->bindParam(':hotel_location', $hotelLocation);
-      $stmt->bindParam(':inclusion_exclusion', $inclusionExclusion);
-      $stmt->bindParam(':where_report', $whereReport);
-      $stmt->bindParam(':terms_conditions', $termsConditions);
-      $stmt->bindParam(':faq',$faq);
-      $stmt->bindParam(':popular_pkg', $popularPkg);
+      $stmt->bindParam(':pkg_name', $pkg_name);
+      $stmt->bindParam(':pkg_days', $pkg_days);
+      $stmt->bindParam(':pkg_overview', $pkg_overview);
+      $stmt->bindParam(':inclusion_exclusion', $inclusion_exclusion);
+      $stmt->bindParam(':where_report', $where_report);
+      $stmt->bindParam(':terms_conditions', $terms_conditions);
       $stmt->bindParam(':status', $status);
       $stmt->bindParam(':created_date',$created_date);
-      $stmt->bindParam(':created_by',$createdBy);
+      $stmt->bindParam(':created_by',$created_by);
       if($stmt->execute()){
         $lpkg_id= $this->connection->lastInsertId();
-        $data1['description'] = $description;
-        $data1['title'] = @$title;
-        $count = 0;
-        foreach($data1 as $value){
-          $count = sizeof($value); 
-        } 
-        for($x=0;$x<$count;$x++){
-          $query2 = "INSERT INTO sg_leisurepkgitinerary(title, description, leisurepkg_id, created_date, created_by, status) VALUES (:title, :description, :lpkg_id, :created_date, :created_by, :status)";
-          $stmt2 = $this->connection->prepare($query2);
-          $stmt2->bindParam(':title', $title[$x]);
-          $stmt2->bindParam(':description', $description[$x]);
-          $stmt2->bindParam(':lpkg_id', $lpkg_id);
-          $stmt2->bindParam(':created_date',$created_date);
-          $stmt2->bindParam(':created_by',$createdBy);
-          $stmt2->bindParam(':status', $status);
-          $stmt2->execute();
-        }
+        
+        
         $status = array(
           'status' => "200",
           'message' => "Packages Added Successfully");
@@ -116,65 +89,16 @@ class LeisurePackagesRepository
   public function updateLeisurePackage($data) {
     try {
       extract($data);
-      $query = "UPDATE sg_leisurepackages SET pkg_name=:pkg_name, pkg_days=:pkg_days, pkg_nights = :pkg_nights, suitable_for = :suitable_for, single_price = :single_price,  couple_price  = :couple_price, family_price = :family_price, pkg_image = :pkg_image, pkg_pagebanner = :pkg_pagebanner, pkg_overview = :pkg_overview,  pkg_activities =:pkg_activities,   hotel_name = :hotel_name, hotel_image = :hotel_image, hotel_location = :hotel_location, inclusion_exclusion = :inclusion_exclusion,    where_report = :where_report, terms_conditions = :terms_conditions, faq=:faq, popular_pkg = :popular_pkg, status = :status, modified_date = :modified_date, modified_by=:modified_by where leisure_id = :leisure_id";
+	  $pkg_overview1 = addslashes($pkg_overview);
+	  $terms_conditions1 = addslashes($terms_conditions);
+     $query = "UPDATE sg_leisurepackages SET pkg_name='".$pkg_name."',pkg_overview = '".$pkg_overview1."', inclusion_exclusion = '".$inclusion_exclusion."',    where_report ='".$where_report."', terms_conditions = '".$terms_conditions1."', modified_date = '".$modified_date."', modified_by='".$modified_by."' where leisure_id = '".$leisure_id."'";
+	
       $stmt = $this->connection->prepare($query);
-      $modified_date = date("Y-m-d H:i:s");
-      $stmt->bindParam(':pkg_name', $pkgName);
-      $stmt->bindParam(':pkg_days', $pkgDays);
-      $stmt->bindParam(':pkg_nights', $pkgNights);
-      $stmt->bindParam(':suitable_for', $suitableFor);
-      $stmt->bindParam(':single_price',$singlePrice);
-      $stmt->bindParam(':couple_price', $couplePrice);
-      $stmt->bindParam(':family_price', $familyPrice);
-      $stmt->bindParam(':pkg_image', $packageImage);
-      $stmt->bindParam(':pkg_pagebanner',$pkgPagebanner);
-      $stmt->bindParam(':pkg_overview', $pkgOverview);
-      $stmt->bindParam(':pkg_activities', $pkgActivities);
-      $stmt->bindParam(':hotel_name', $hotelName);
-      $stmt->bindParam(':hotel_image', $hotelImage);
-      $stmt->bindParam(':hotel_location', $hotelLocation);
-      $stmt->bindParam(':inclusion_exclusion', $inclusionExclusion);
-      $stmt->bindParam(':where_report', $whereReport);
-      $stmt->bindParam(':terms_conditions', $termsConditions);
-      $stmt->bindParam(':faq',$faq);
-      $stmt->bindParam(':popular_pkg', $popularPkg);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':modified_date',$modified_date);
-      $stmt->bindParam(':modified_by',$createdBy);
-      $stmt->bindParam(':leisure_id',$leisureId);
+      
+      //$stmt->bindParam(':leisure_id',$leisureId);
       if($stmt->execute()){
-        $data1['id'] = $lpitineraryId;
-        $data1['description'] = $description;
-        $data1['title'] = @$title;
-        $count = 0;
-        foreach($data1 as $value){
-          $count = sizeof($value); 
-        } 
-        for($x=0;$x<$count;$x++){
-          $id = @$data1['id'][$x];
-          if(@$id){
-            $query2 = "UPDATE sg_leisurepkgitinerary SET title=:title, description=:description, modified_date = :modified_date, modified_by =:modified_by, status = :status where lpitinerary_id = :lpitinerary_id";
-            $stmt2 = $this->connection->prepare($query2);
-            $stmt2->bindParam(':title', $data1['title'][$x]);
-            $stmt2->bindParam(':description', $data1['description'][$x]);
-            $stmt2->bindParam(':modified_date' ,$modified_date);
-            $stmt2->bindParam(':status', $status);
-            $stmt2->bindParam(':modified_by',$createdBy);
-            $stmt2->bindParam(':lpitinerary_id', $id);
-            $stmt2->execute();
-          }
-          else {
-            $query3 = "INSERT INTO sg_leisurepkgitinerary SET title=:title, description=:description , leisurepkg_id = :lpkg_id,created_date = :created_date, created_by=:created_by, status=:status";
-            $stmt3 = $this->connection->prepare($query3);
-            $stmt3->bindParam(':title', $data1['title'][$x]);
-            $stmt3->bindParam(':description', $data1['description'][$x]);
-            $stmt3->bindParam(':lpkg_id', $leisureId);
-            $stmt3->bindParam(':created_by',$createdBy);
-            $stmt3->bindParam(':created_date' ,$created_date);
-            $stmt3->bindParam(':status', $status);
-            $stmt3->execute();
-          }
-        }
+        
+        
         $status = array(
           'status' => "200",
           'message' => "Packages Updated Successfully");
@@ -182,6 +106,108 @@ class LeisurePackagesRepository
         $status = array(
           'status' => "304",
           'message' => "Packages Not Updated Successfully");
+      }
+      return $status;
+    } catch(PDOException $e) {
+      $status = array(
+              'status' => "500",
+              'message' => $e->getMessage()
+          );
+      return $status;
+    }
+  }
+  public function addLeisureIterinary($data){
+	  try {
+		  extract($data);
+		  $query3 = "INSERT INTO sg_leisurepkgitinerary SET title=:title, description=:description , leisurepkg_id = :lpkg_id,created_date = :created_date, created_by=:created_by, status=:status";
+            $stmt3 = $this->connection->prepare($query3);
+            $stmt3->bindParam(':title', $title);
+            $stmt3->bindParam(':description', $description);
+            $stmt3->bindParam(':lpkg_id', $leisure_id);
+            $stmt3->bindParam(':created_by',$user);
+            $stmt3->bindParam(':created_date' ,$ndate);
+            $stmt3->bindParam(':status', $status);
+            $r = $stmt3->execute();
+			if($r){
+				$status = array(
+				  'status' => "200",
+				  'message' => 'Added'
+			  );
+		  return $status;
+			}
+		} catch(PDOException $e) {
+		  $status = array(
+				  'status' => "500",
+				  'message' => $e->getMessage()
+			  );
+		  return $status;
+		}
+  }
+  public function updateLeisureitinerary($data){
+	 // print_r($data);exit;
+	 try {
+	  extract($data);
+          if(@$lpitinerary_id){
+            $query2 = "UPDATE sg_leisurepkgitinerary SET title=:title, description=:description, modified_date = :modified_date, modified_by =:modified_by where lpitinerary_id = :lpitinerary_id";
+            $stmt2 = $this->connection->prepare($query2);
+            $stmt2->bindParam(':title', $title);
+            $stmt2->bindParam(':description', $description);
+            $stmt2->bindParam(':modified_date' ,$ndate);
+            //$stmt2->bindParam(':status', $status);
+            $stmt2->bindParam(':modified_by',$user);
+            $stmt2->bindParam(':lpitinerary_id', $lpitinerary_id);
+            $r = $stmt2->execute();
+			
+          }
+          else {
+            $query3 = "INSERT INTO sg_leisurepkgitinerary SET title=:title, description=:description , leisurepkg_id = :lpkg_id,created_date = :created_date, created_by=:created_by, status=:status";
+            $stmt3 = $this->connection->prepare($query3);
+            $stmt3->bindParam(':title', $title);
+            $stmt3->bindParam(':description', $description);
+            $stmt3->bindParam(':lpkg_id', $leisure_id);
+            $stmt3->bindParam(':created_by',$user);
+            $stmt3->bindParam(':created_date' ,$ndate);
+            $stmt3->bindParam(':status', $status);
+            $r = $stmt3->execute();
+          }
+		  
+			  if($r){
+					$status = array(
+					  'status' => "200",
+					  'message' => 'updated'
+				  );
+					return $status;
+			}
+		  } catch(PDOException $e) {
+		  $status = array(
+				  'status' => "500",
+				  'message' => $e->getMessage()
+			  );
+		  return $status;
+		}
+        
+  }
+  public function getItineraryLeisure($data){
+	   try {
+		   
+      extract($data);
+      
+      $query2 = "SELECT  * FROM sg_leisurepkgitinerary WHERE leisurepkg_id = :leisurepkg_id and status !='9'";
+      $stmt2 = $this->connection->prepare($query2);
+      $stmt2->bindParam(':leisurepkg_id',$lepkg, PDO::PARAM_STR);
+     $r = $stmt2->execute();
+	
+      $res= $stmt2->fetchAll(PDO::FETCH_OBJ);
+	 
+      if(!empty($res)){
+        $status = array(
+          "status" => "200",
+          "message" =>  "Success",
+          "leisure" => $res);
+      }else{
+         $status = array(
+          "status" => "204",
+           "message" => "Failure");
       }
       return $status;
     } catch(PDOException $e) {
@@ -226,17 +252,46 @@ class LeisurePackagesRepository
   }
   public function updateLeisurePackageStatus($data) {
     try {
+		
       extract($data);
       $query = "UPDATE sg_leisurepackages SET status = :status, modified_date = :modified_date, modified_by=:modified_by where leisure_id = :leisure_id";
       $stmt = $this->connection->prepare($query);
       $stmt->bindParam(':status', $status);
       $stmt->bindParam(':modified_date',$modified_date);
-      $stmt->bindParam(':modified_by',$createdBy);
-      $stmt->bindParam(':leisure_id',$leisureId);
+      $stmt->bindParam(':modified_by',$modified_by);
+      $stmt->bindParam(':leisure_id',$leisure_id);
       if($stmt->execute()){
         $status = array(
           'status' => "200",
-          'message' => "Packages Updated Successfully");
+          'message' => "Row deleted Successfully");
+      } else{
+        $status = array(
+          'status' => "304",
+          'message' => "Packages Not Updated Successfully");
+      }
+      return $status;
+    } catch(PDOException $e) {
+      $status = array(
+              'status' => "500",
+              'message' => $e->getMessage()
+          );
+      return $status;
+    }
+  }
+  public function UpdateLeisurePackageitiStatus($data) {
+    try {
+		
+      extract($data);
+      $query = "UPDATE sg_leisurepkgitinerary SET status = :status, modified_date = :modified_date, modified_by=:modified_by where lpitinerary_id  = :lpitinerary_id";
+      $stmt = $this->connection->prepare($query);
+      $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+      $stmt->bindParam(':modified_date',$modified_date, PDO::PARAM_STR);
+      $stmt->bindParam(':modified_by',$modified_by, PDO::PARAM_STR);
+      $stmt->bindParam(':lpitinerary_id',$lpitinerary_id, PDO::PARAM_STR);
+      if($stmt->execute()){
+        $status = array(
+          'status' => "200",
+          'message' => "Row deleted Successfully");
       } else{
         $status = array(
           'status' => "304",

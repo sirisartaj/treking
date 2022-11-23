@@ -18,9 +18,10 @@ final class UpdateLeisurePackageStatus
       ResponseInterface $response
   ): ResponseInterface 
   {
-     $data = $request->getParsedBody();
+     $data = $request->getBody();
     $data =(array) json_decode($data);
     //$data = array_merge($_POST, $_FILES);
+	
     $leisurePackages = $this->leisurePackages->updateLeisurePackageStatus($data);
     $response->getBody()->write((string)json_encode($leisurePackages));
     return $response

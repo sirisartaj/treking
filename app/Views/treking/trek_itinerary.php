@@ -10,7 +10,7 @@
 <!-- include summernote css/js -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>	
     
 	</head>
 	<body>
@@ -23,6 +23,7 @@
 				foreach($result as $t){ ?>
 					<div class="form-group ">
 						<div class="btn btn-sm btn-danger">day <?php echo $i++; ?></div>
+						<div class="text-right btn btn-sm btn-danger" onclick="deletea('<?php echo $t->iterinary_id;?>');">Delete</div>
 					</div>
 					<div class="form-group">
 						<div class="mb-3">
@@ -57,6 +58,35 @@
 		
 		
 	<script> 
+		function deletea(a){
+		console.log(a);
+				Swal.fire({
+				  title: 'Are you sure?',
+				  text: "You won't be able to revert this!",
+				  icon: 'warning',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: 'Yes, delete it!'
+				}).then((result) => {
+				  if (result.isConfirmed) {
+				  	$.ajax({
+				      
+				      type: "GET",
+				      url: '<?php echo base_url()."/deletetrekitinerary/";?>'+a,
+				      cache: false,
+				      contentType: false,
+				      processData: false,
+				      success: function(result1) {
+				      	console.log(result1);
+				      	location.reload();
+				      	 
+				      }
+				    });
+				    
+				  }
+				})
+			}
 		function addday(){
 			 day = parseInt($('#day').html())+1;
 			var str = '<div class="form-group "><div class="btn btn-sm btn-danger">day '+day+'</div></div><div class="form-group"><div class="mb-3"><label for="exampleFormControlInput1" class="form-label">Title</label><input type="hidden" class="form-control" id="iterinary_id" name="iterinary_id[]" placeholder="" value=""><input type="text" class="form-control" id="iterinary_title" name="iterinary_title[]" placeholder="iterinary title" value=""></div><div class="mb-3"><label for="exampleFormControlTextarea1" class="form-label">Description</label><textarea class="form-control" id="exampleFormControlTextarea1" name="iterinary_details[]" rows="3"></textarea></div></div>';

@@ -18,9 +18,10 @@ final class UpdateExpedition
       ResponseInterface $response
   ): ResponseInterface 
   {
-     // $data = $request->getParsedBody();
-    // $data =(array) json_decode($data);
-    $data = array_merge($_POST, $_FILES);
+      $data = $request->getBody();
+     $data =(array) json_decode($data);
+    
+    //$data = array_merge($_POST, $_FILES);
     $expeditions = $this->expeditions->updateExpedition($data);
     $response->getBody()->write((string)json_encode($expeditions));
     return $response

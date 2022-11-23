@@ -30,95 +30,15 @@ final class LeisurePackages
   }
   public function addLeisurePackage($data) {
     extract($data);
-    if(isset($packageImage)&&!empty($packageImage)){
-      $filedir = UPLOADPATH."packages/"; 
-      $randName = rand(10101010, 9090909090);
-      $newName = "pkg_". $randName;
-      $ext = substr($packageImage['name'], strrpos($packageImage['name'], '.') + 1);
-      list($width, $height) = getimagesize($packageImage['tmp_name']); 
-      $ImageUpload = new ImageUpload;
-      $ImageUpload->File = $packageImage;
-      $ImageUpload->method = 1;
-      $ImageUpload->SavePath = $filedir;
-      $ImageUpload->NewWidth = $width;
-      $ImageUpload->NewHeight = $height;
-      $ImageUpload->NewName = $newName;
-      $ImageUpload->OverWrite = true;
-      $err = $ImageUpload->UploadFile();
-      $packageImage = $newName.".".strtolower($ext);
-    }
-    else {
-      $packageImage = $packageImage;
-    }
-    if(isset($hotelImage)&&!empty($hotelImage)){
-      $filedir = UPLOADPATH."packages/hotel/"; 
-      $randName = rand(10101010, 9090909090);
-      $newName = "pkg_". $randName;
-      $ext = substr($hotelImage['name'], strrpos($hotelImage['name'], '.') + 1);
-      list($width, $height) = getimagesize($hotelImage['tmp_name']); 
-      $ImageUpload = new ImageUpload;
-      $ImageUpload->File = $hotelImage;
-      $ImageUpload->method = 1;
-      $ImageUpload->SavePath = $filedir;
-      $ImageUpload->NewWidth = $width;
-      $ImageUpload->NewHeight = $height;
-      $ImageUpload->NewName = $newName;
-      $ImageUpload->OverWrite = true;
-      $err = $ImageUpload->UploadFile();
-      $hotelImage = $newName.".".strtolower($ext);
-    }
-    else {
-      $hotelImage = $hotelImage;
-    }
-    $data['packageImage'] = $packageImage;
-    $data['hotelImage'] = $hotelImage;
+    
+    
     $LeisurePackages = $this->repository->addLeisurePackage($data);
     return $LeisurePackages;
   }
   public function updateLeisurePackage($data) {
+	  
     extract($data);
-    if(isset($packageImage)&&!empty($packageImage)){
-      $filedir = UPLOADPATH."packages/"; 
-      $randName = rand(10101010, 9090909090);
-      $newName = "pkg_". $randName;
-      $ext = substr($packageImage['name'], strrpos($packageImage['name'], '.') + 1);
-      list($width, $height) = getimagesize($packageImage['tmp_name']); 
-      $ImageUpload = new ImageUpload;
-      $ImageUpload->File = $packageImage;
-      $ImageUpload->method = 1;
-      $ImageUpload->SavePath = $filedir;
-      $ImageUpload->NewWidth = $width;
-      $ImageUpload->NewHeight = $height;
-      $ImageUpload->NewName = $newName;
-      $ImageUpload->OverWrite = true;
-      $err = $ImageUpload->UploadFile();
-      $packageImage = $newName.".".strtolower($ext);
-    }
-    else {
-      $packageImage = $packageImage;
-    }
-    if(isset($hotelImage)&&!empty($hotelImage)){
-      $filedir = UPLOADPATH."packages/hotel/"; 
-      $randName = rand(10101010, 9090909090);
-      $newName = "pkg_". $randName;
-      $ext = substr($hotelImage['name'], strrpos($hotelImage['name'], '.') + 1);
-      list($width, $height) = getimagesize($hotelImage['tmp_name']); 
-      $ImageUpload = new ImageUpload;
-      $ImageUpload->File = $hotelImage;
-      $ImageUpload->method = 1;
-      $ImageUpload->SavePath = $filedir;
-      $ImageUpload->NewWidth = $width;
-      $ImageUpload->NewHeight = $height;
-      $ImageUpload->NewName = $newName;
-      $ImageUpload->OverWrite = true;
-      $err = $ImageUpload->UploadFile();
-      $hotelImage = $newName.".".strtolower($ext);
-    }
-    else {
-      $hotelImage = $hotelImage;
-    }
-    $data['packageImage'] = $packageImage;
-    $data['hotelImage'] = $hotelImage;
+    
     $LeisurePackages = $this->repository->updateLeisurePackage($data);
     return $LeisurePackages;
   }
@@ -130,6 +50,10 @@ final class LeisurePackages
   public function updateLeisurePackageStatus($data) {
     $LeisurePackages = $this->repository->updateLeisurePackageStatus($data);
     return $LeisurePackages;
+  }
+  public function UpdateLeisurePackageitiStatus($data) {
+    $UpdateLeisurePackageitiStatus = $this->repository->UpdateLeisurePackageitiStatus($data);
+    return $UpdateLeisurePackageitiStatus;
   }
   public function addAddOnActivity($data) {
     $LeisurePackages = $this->repository->addAddOnActivity($data);
@@ -143,8 +67,16 @@ final class LeisurePackages
     $LeisurePackages = $this->repository->getAddOnActivity($data);
     return $LeisurePackages;
   }
-  public function updateAddOnActivityStatus($data) {
-    $LeisurePackages = $this->repository->updateAddOnActivityStatus($data);
-    return $LeisurePackages;
+  public function getItineraryLeisure($data) {
+    $LeisurePackagesItinerary = $this->repository->getItineraryLeisure($data);
+    return $LeisurePackagesItinerary;
+  }
+  public function editLeisureIterinary($data) {
+    $editLeisurePackagesItinerary = $this->repository->updateLeisureitinerary($data);
+    return $editLeisurePackagesItinerary;
+  } 
+  public function addLeisureIterinary($data) {
+    $addLeisureIterinary = $this->repository->addLeisureIterinary($data);
+    return $addLeisureIterinary;
   }
 }

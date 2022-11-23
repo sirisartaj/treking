@@ -63,6 +63,13 @@ class TrekModel extends Model{
        return $home->CallAPI('POST',$url,$data);          
     }
 
+    public function deleteitinerarytrek($data){           
+        $home = new home();   
+        //print_r(json_encode($data));exit;     
+       $url = baseURL1.'/treks/delete_itinerary_Trek';//exit;
+       return $home->CallAPI('POST',$url,$data);          
+    }
+
     public function addtrek($data){           
         $home = new home();   
         //print_r(json_encode($data));exit;     

@@ -84,7 +84,7 @@ class TreksRepository
   }
   public function addTrekIterinaryDetails($data) {
     try {
-      
+
       extract($data);                  
       $query2 = "INSERT INTO ".DBPREFIX."_trekiterinarydetails SET iterinary_title=:iterinary_title, iterinary_details=:iterinary_details,trek_id = :trek_id,created_date = :created_date,created_by=:created_by,recordstatus=:status";
       $stmt2 = $this->connection->prepare($query2);
@@ -1368,104 +1368,9 @@ class TreksRepository
       return $status;
     }
   }
-  public function addTrekFaq($data) {
-    try {
-      extract($data);
-      $query = "INSERT INTO `sg_trek_faq`(`trek_id`, `cat_id`, `question`, `answer`, `status`, `created_by`, `created_date`) VALUES(:trek_id, :cat_id, :question, :answer, :status, :created_by, :created_date)";
-      $created_date = date("Y-m-d H:i:s");
-      $stmt = $this->connection->prepare($query);
-      $stmt->bindParam(':trek_id', $trekId);
-      $stmt->bindParam(':cat_id', $catId);
-      $stmt->bindParam(':question', $question);
-      $stmt->bindParam(':answer', $answer);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':created_date' ,$created_date);
-      $stmt->bindParam(':created_by',$createdBy);
-      $stmt->execute();
-      $trekfaq_id = $this->connection->lastInsertId();
-      if(!empty($trekfaq_id)){
-        $status = array(
-          'status' => '200',
-          'message' => 'Trek Faq Added Successfully',
-          'trekfaq_id' => $trekfaq_id);        
-      }else{
-        $status = array(
-                  'status' => "304",
-                  'message' => "Not Added Successfully"
-              );
-      }
-      return $status;
-    } catch(PDOException $e) {
-      $status = array(
-              'status' => "500",
-              'message' => $e->getMessage()
-          );
-      return $status;
-    }
-  }
-  public function updateTrekFaq($data) {
-    try {
-      extract($data);
-      $query = "UPDATE `sg_trek_faq` SET `trek_id` = :trek_id, `cat_id` = :cat_id, `question` = :question, `answer` = :answer, `status` = :status, `modified_by` =:modified_by, `modified_date` = :modified_date WHERE faq_id=:faq_id";
-      $modified_date = date("Y-m-d H:i:s");
-      $stmt = $this->connection->prepare($query);
-      $stmt->bindParam(':trek_id', $trekId);
-      $stmt->bindParam(':cat_id', $catId);
-      $stmt->bindParam(':question', $question);
-      $stmt->bindParam(':answer', $answer);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':modified_date' ,$modified_date);
-      $stmt->bindParam(':modified_by',$createdBy);
-      $stmt->bindParam(':faq_id',$faqId);
-      $res = $stmt->execute();
-      if(!empty($res)){
-        $status = array(
-          'status' => '200',
-          'message' => 'Trek Faq Updated Successfully');        
-      }else{
-        $status = array(
-                  'status' => "304",
-                  'message' => "Not Updated Successfully"
-              );
-      }
-      return $status;
-    } catch(PDOException $e) {
-      $status = array(
-              'status' => "500",
-              'message' => $e->getMessage()
-          );
-      return $status;
-    }
-  }
-  public function getFaq($data) {
-    try {
-      extract($data);
-      $query = "SELECT tf.*,(select category_title from sg_faq_categories where faq_cat_id=tf.cat_id) as cat_name FROM sg_trek_faq tf where tf.status='0' and tf.trek_id=".$trek_id;
-      $stmt = $this->connection->prepare($query);
-      $stmt->bindParam(':trek_id', $trek_id);
-      $stmt->execute();
-      $faq = $stmt->fetchAll(PDO::FETCH_OBJ);
-      if(!empty($faq)){
-         $status = array(
-          'status' => "200",
-          'message' => "Success",
-         'faq' => $faq
-       );
-      }else{
-         $status = array(
-        "status" => "204",
-         "message" => "No Data Found");
-      }
-      return $status;
-    } catch(PDOException $e) {
-      $status = array(
-              'status' => "500",
-              'message' => $e->getMessage()
-          );
-      return $status;
-    }
-  }
-  public function updateTrekStatus($data) {
+  
+   
+  public function UpdateTrekitiStatus($data) {
     try {
       extract($data);
       $query = "UPDATE  sg_trekingdetails SET status = :status WHERE trek_id = :trek_id";
@@ -1491,170 +1396,25 @@ class TreksRepository
       return $status;
     }
   }
-  public function updateBatchStatus($data) {
+  public function updateTrekIterinaryStatus($data) {
     try {
-      extract($data);
-      $query = "UPDATE  sg_inserttrekbatches SET trekbatch_status = :status WHERE batch_id = :batch_id";
-      $stmt = $this->connection->prepare($query);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':batch_id', $batchId);
-      if($stmt->execute()){
-        $status = array(
-        'status' => "200",
-        'message' => "Success batch updated Successfully");
-        return $status;
-      }else{
-        $status = array(
-        'status' => "304",
-        'message' => "Failure batch Not updated Successfully");
-        return $status;
-      }
-    } catch(PDOException $e) {
-      $status = array(
-              'status' => "500",
-              'message' => $e->getMessage()
-          );
-      return $status;
-    }
-  }
-  public function updateOrganizerStatus($data) {
-    try {
-      extract($data);
-      $query = "UPDATE  sg_trekorganizersmap SET status = :status WHERE organizer_id = :organizer_id";
-      $stmt = $this->connection->prepare($query);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':organizer_id', $organizerId);
-      if($stmt->execute()){
-        $status = array(
-        'status' => "200",
-        'message' => "Success organizer updated Successfully");
-        return $status;
-      }else{
-        $status = array(
-        'status' => "304",
-        'message' => "Failure organizer Not updated Successfully");
-        return $status;
-      }
-    } catch(PDOException $e) {
-      $status = array(
-              'status' => "500",
-              'message' => $e->getMessage()
-          );
-      return $status;
-    }
-  }
-  public function updateCouponStatus($data) {
-    try {
-      extract($data);
-      $query = "UPDATE  sg_trekcouponsmap SET status = :status WHERE coupon_id = :coupon_id";
-      $stmt = $this->connection->prepare($query);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':coupon_id', $couponId);
-      if($stmt->execute()){
-        $status = array(
-        'status' => "200",
-        'message' => "Success coupon updated Successfully");
-        return $status;
-      }else{
-        $status = array(
-        'status' => "304",
-        'message' => "Failure coupon Not updated Successfully");
-        return $status;
-      }
-    } catch(PDOException $e) {
-      $status = array(
-              'status' => "500",
-              'message' => $e->getMessage()
-          );
-      return $status;
-    }
-  }
-  public function updateTrekImageStatus($data) {
-    try {
-      extract($data);
-      $query = "UPDATE  sg_trek_gallery SET recordstatus = :status WHERE image_id=:image_id";
-      $stmt = $this->connection->prepare($query);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':image_id', $imageId);
-      if($stmt->execute()){
-        $status = array(
-        'status' => "200",
-        'message' => "Success image updated Successfully");
-        return $status;
-      }else{
-        $status = array(
-        'status' => "304",
-        'message' => "Failure image Not updated Successfully");
-        return $status;
-      }
-    } catch(PDOException $e) {
-      $status = array(
-              'status' => "500",
-              'message' => $e->getMessage()
-          );
-      return $status;
-    }
-  }
-  public function updateTrekRentalStatus($data) {
-    try {
-      extract($data);
-      $query = "UPDATE  sg_trekrentalitems SET status = :status WHERE trekrentalitem_id =:trekrentalitem_id ";
-      $stmt = $this->connection->prepare($query);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':trekrentalitem_id ', $itemId );
-      if($stmt->execute()){
-        $status = array(
-        'status' => "200",
-        'message' => "Success rental item updated Successfully");
-        return $status;
-      }else{
-        $status = array(
-        'status' => "304",
-        'message' => "Failure rental item Not updated Successfully");
-        return $status;
-      }
-    } catch(PDOException $e) {
-      $status = array(
-              'status' => "500",
-              'message' => $e->getMessage()
-          );
-      return $status;
-    }
-  }
-  public function updateTrekFaqStatus($data) {
-    try {
-      extract($data);
-      $query = "UPDATE `sg_trek_faq` SET `status` = :status, `modified_by` =:modified_by, `modified_date` = :modified_date WHERE faq_id=:faq_id";
-      $modified_date = date("Y-m-d H:i:s");
-      $stmt = $this->connection->prepare($query);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':modified_date' ,$modified_date);
-      $stmt->bindParam(':modified_by',$userBy);
-      $stmt->bindParam(':faq_id',$faqId);
-      $res = $stmt->execute();
-      if(!empty($res)){
-        $status = array(
-          'status' => '200',
-          'message' => 'Trek Faq Updated Successfully');        
-      }else{
-        $status = array(
-                  'status' => "304",
-                  'message' => "Not Updated Successfully"
-              );
-      }
-      return $status;
-    } catch(PDOException $e) {
-      $status = array(
-              'status' => "500",
-              'message' => $e->getMessage()
-          );
-      return $status;
-    }
-  }
-  public function generateCertificate($data) {
-    try {
-      extract($data);
       
+      extract($data);
+      $query = "UPDATE  sg_trekiterinarydetails SET recordstatus = :status WHERE iterinary_id = :iterinary_id";
+      $stmt = $this->connection->prepare($query);
+      $stmt->bindParam(':status', $status);
+      $stmt->bindParam(':iterinary_id', $iterinary_id);
+      if($stmt->execute()){
+        $status = array(
+        'status' => "200",
+        'message' => "Row updated Successfully");
+        return $status;
+      }else{
+        $status = array(
+        'status' => "304",
+        'message' => "Failure trek Not updated Successfully");
+        return $status;
+      }
     } catch(PDOException $e) {
       $status = array(
               'status' => "500",
@@ -1663,4 +1423,5 @@ class TreksRepository
       return $status;
     }
   }
+  
 }

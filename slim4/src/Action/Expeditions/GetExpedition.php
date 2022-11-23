@@ -18,6 +18,7 @@ final class GetExpedition
       ResponseInterface $response, $args 
   ): ResponseInterface
   {
+    
     $expeditions = $this->expeditions->getExpedition($args);
     $response->getBody()->write((string)json_encode($expeditions));
     return $response
