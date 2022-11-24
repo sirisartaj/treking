@@ -60,5 +60,15 @@ return function (App $app) {
   $app->post('/leisurepackages/addleisureiterinary',\App\Action\LeisurePackages\AddLeisureIterinary::class);
   $app->post('/leisurepackages/editleisureiterinary',\App\Action\LeisurePackages\UpdateLeisurePackageitiStatus::class);
   $app->post('/leisurepackages/deleteiterinary',\App\Action\LeisurePackages\UpdateLeisurePackageitiStatus::class);
+  
+  
+  
+  $app->get('/hostel/gethostels', \App\Action\Hostels\Gethostels::class);
+  $app->post('/hostel/addhostel', \App\Action\Hostels\Addhostel::class);
+  $app->get('/hostel/edithostel/{lepkg_id}', \App\Action\Hostels\Gethostel::class);
+  
+  $app->post('/hostel/updatehostel', \App\Action\Hostels\Updatehostel::class);
+  $app->post('/hostel/updatehostelstatus', \App\Action\Hostels\UpdatehostelStatus::class);
+  
 
 };

@@ -102,17 +102,17 @@ $routes->get('/deleteexpedition/(:any)', 'ExpeditionController::deleteexpedition
 
 
 
-/*hotel*/
-$routes->get('/Hotel', 'HotelController::index');
-$routes->get('/Hoteltrekslist', 'HotelController::trekslist');
-//$routes->get('/trekitinerary', 'HotelController::trekitinerary');
-$routes->get('/HoteladdTrek', 'HotelController::addTrek');
-$routes->get('/Hotelgettrek/(:any)', 'HotelController::gettrek/$1');
-$routes->get('/Hotelgettrekitinerary/(:any)', 'HotelController::gettrekitinerary/$1');
-$routes->post('/Hoteledittrek', 'HotelController::edittrek');
-$routes->post('/Hotelstoretrek', 'HotelController::storetrek');
-$routes->post('/Hoteltrekiterinarystore', 'HotelController::trekiterinarystore');
-$routes->post('/Hotelfileupload', 'HotelController::fileupload');
+/*hostel*/
+$routes->get('/Hostel', 'HostelController::index');
+$routes->get('/Hosteltrekslist', 'HostelController::hostelslist');
+//$routes->get('/trekitinerary', 'HostelController::trekitinerary');
+$routes->get('/Hosteladdhostel', 'HostelController::addhostel');
+$routes->get('/Hostelgethostel/(:any)', 'HostelController::gethostel/$1');
+$routes->get('/Hostelgettrekitinerary/(:any)', 'HostelController::gettrekitinerary/$1');
+$routes->post('/Hosteledithostel', 'HostelController::edithostel');
+$routes->post('/Hostelstorehostel', 'HostelController::storehostel');
+$routes->post('/Hosteltrekiterinarystore', 'HostelController::trekiterinarystore');
+$routes->post('/Hostelfileupload', 'HostelController::fileupload');
 
 
 

@@ -1,58 +1,58 @@
 <?php 
 namespace App\Controllers;  
 use CodeIgniter\Controller;
-use App\Models\TrekModel;
+use App\Models\HostelModel;
   
-class TrekController extends Controller
+class HostelController extends Controller
 {
     public function index()
     {        
-        $TrekModel = new TrekModel();
-        $data['result'] = (array) $TrekModel->getTreks();
+        $HostelModel = new HostelModel();
+        $data['result'] = (array) $HostelModel->getHostels();
         //print_r($data['result']);exit;
 
-        echo view('treking/trekslist',$data);
+        echo view('hostel/hostelslist',$data);
     }
 
-    public function trekslist()
+    public function hostelslist()
     {
-        $TrekModel = new TrekModel();
-        $data['result'] = (array) $TrekModel->getTreks();
+        $HostelModel = new HostelModel();
+        $data['result'] = (array) $HostelModel->getHostels();
         //print_r($data['result']);exit;
 
-        echo view('treking/trekslist',$data);
+        echo view('hostel/hostelslist',$data);
     }
-   /* public function trekitinerary1()
+   /* public function hostelitinerary1()
     {
-        $TrekModel = new TrekModel();
-        $data['result'] = (array) $TrekModel->getTreks();
+        $HostelModel = new HostelModel();
+        $data['result'] = (array) $HostelModel->getHostels();
         //print_r($data['result']);exit;
 
-        echo view('treking/trekitinerary',$data);
+        echo view('hostel/hostelitinerary',$data);
     }*/
 
     
-    public function storetrek()
+    public function storehostel()
     {
       
         helper(['form']);
        $rules = [
-            'trek_fee'      => 'required',
-            'trek_days'      => 'required',
-            'trek_title'      => 'required|is_unique[sg_trekingdetails.trek_title]'
+            'hostel_fee'      => 'required',
+            'hostel_days'      => 'required',
+            'hostel_title'      => 'required|is_unique[sg_hosteldetails.hostel_title]'
         ];
         
         if($this->validate($rules)){ 
-            $TrekModel = new TrekModel();
-            $trek_overview = str_replace('"','\'', $this->request->getVar('trek_overview'));
+            $HostelModel = new HostelModel();
+            $hostel_overview = str_replace('"','\'', $this->request->getVar('hostel_overview'));
             $things_carry = str_replace('"','\'', $this->request->getVar('things_carry'));
             $terms = str_replace('"','\'', $this->request->getVar('terms'));
             $mapimage = str_replace('"','\'', $this->request->getVar('map_image'));
             $data = [
-                'trek_title'     => $this->request->getVar('trek_title'),
-                'trek_fee'    => $this->request->getVar('trek_fee'),                
-                'trek_days' =>$this->request->getVar('trek_days'),
-                'trek_overview'=> htmlspecialchars($trek_overview, ENT_QUOTES),
+                'hostel_title'     => $this->request->getVar('hostel_title'),
+                'hostel_fee'    => $this->request->getVar('hostel_fee'),                
+                'hostel_days' =>$this->request->getVar('hostel_days'),
+                'hostel_overview'=> htmlspecialchars($hostel_overview, ENT_QUOTES),
                 'things_carry' => htmlspecialchars($things_carry, ENT_QUOTES),
                 'terms' => htmlspecialchars($terms, ENT_QUOTES),
                 'map_image' => htmlspecialchars($mapimage, ENT_QUOTES),
@@ -61,24 +61,24 @@ class TrekController extends Controller
                 'status' =>0
             ];
 
-            $a = $TrekModel->addtrek($data);
+            $a = $HostelModel->addhostel($data);
             //print_r($a);exit;
             if($a->status ==200){
                 $_SESSION['message'] = $a->message;
-                return redirect()->to('addTrek');
+                return redirect()->to('addHostel');
             }else{
 
                 $data['validation'] = $this->validator;
-                echo view('treking\addtrek', $data);
+                echo view('hostel\addhostel', $data);
             }
             
         }else{
             $data['validation'] = $this->validator;
-            echo view('treking\addtrek', $data);
+            echo view('hostel\addhostel', $data);
         }
     }
 
-    public function addTrek(){
+    public function addHostel(){
         helper(['form']);
         $rules = [ ];
         
@@ -87,29 +87,29 @@ class TrekController extends Controller
          }else{
             $data['validation'] = $this->validator;
         
-            echo view('treking\addtrek',$data);
+            echo view('hostel\addhostel',$data);
         }
     }
 
-    public function edittrek()
+    public function edithostel()
     {
-        $TrekModel = new TrekModel();
+        $HostelModel = new HostelModel();
         helper(['form']);
         $rules = [
-            'trek_id'      => 'required'
+            'hostel_id'      => 'required'
         ];
           
         if($this->validate($rules)){ 
             
 
-            $trek_overview = str_replace('"','\'', $this->request->getVar('trek_overview'));
+            $hostel_overview = str_replace('"','\'', $this->request->getVar('hostel_overview'));
             $things_carry = str_replace('"','\'', $this->request->getVar('things_carry'));
             $terms = str_replace('"','\'', $this->request->getVar('terms'));
             $mapimage = str_replace('"','\'', $this->request->getVar('map_image'));
             $data = [
-                'trek_id'    => $this->request->getVar('trek_id'),
-                'trek_title'    => $this->request->getVar('trek_title'),
-                'trek_overview'=> htmlspecialchars($trek_overview, ENT_QUOTES),
+                'hostel_id'    => $this->request->getVar('hostel_id'),
+                'hostel_title'    => $this->request->getVar('hostel_title'),
+                'hostel_overview'=> htmlspecialchars($hostel_overview, ENT_QUOTES),
                 'things_carry' => htmlspecialchars($things_carry, ENT_QUOTES),
                 'terms' => htmlspecialchars($terms, ENT_QUOTES),
                 'map_image' => htmlspecialchars($mapimage, ENT_QUOTES),
@@ -118,58 +118,58 @@ class TrekController extends Controller
 
             ];
            
-           $a = $TrekModel->edittrekdata($data);
+           $a = $HostelModel->edithosteldata($data);
            
-            return redirect()->to('/trekslist');
+            return redirect()->to('/hostelslist');
         }else{
             $rules = [];
-            $trek = (array) $TrekModel->getTrek($trek_id);           
-            if($trek['status'] =200){
-                 $data['result']  = $trek['trek_details']->treks;
+            $hostel = (array) $HostelModel->getHostel($hostel_id);           
+            if($hostel['status'] =200){
+                 $data['result']  = $hostel['hostel_details']->hostels;
             }
             if($this->validate($rules)){}else{
-                $data['Headding']="Edit Trek";
+                $data['Headding']="Edit Hostel";
             $data['validation'] = $this->validator;
-            echo view('treking/trekedit', $data);
+            echo view('hostel/hosteledit', $data);
             }
         }
     
     }
 
-    function gettrek($trek_id=''){
-        $TrekModel = new TrekModel();
+    function gethostel($hostel_id=''){
+        $HostelModel = new HostelModel();
         helper(['form']);
         $rules = [ ];
-        $trek = (array) $TrekModel->getTrek($trek_id);
-        if($trek['status'] =200){
-             $data['result']  = $trek['trek_details']->treks;
+        $hostel = (array) $HostelModel->getHostel($hostel_id);
+        if($hostel['status'] =200){
+             $data['result']  = $hostel['hostel_details']->hostels;
         }
         
-        $data['Headding']="Edit Trek";
+        $data['Headding']="Edit Hostel";
         if($this->validate($rules)){}else{
             $data['validation'] = $this->validator;
         }
-        echo view('treking/trekedit',$data);
+        echo view('hostel/hosteledit',$data);
     }
-    function gettrekitinerary($trek_id=''){
-            $TrekModel = new TrekModel();
-            $data['trek_id'] =$trek_id;
+    function gethostelitinerary($hostel_id=''){
+            $HostelModel = new HostelModel();
+            $data['hostel_id'] =$hostel_id;
             helper(['form']);
             $rules = [ ];
-            $trek = (array) $TrekModel->get_itinerary_Trek($trek_id);
-            //print_r($trek);exit;
-            if($trek['status'] =200){
-                 $data['result']  = json_decode(json_encode($trek['trek_details']));
+            $hostel = (array) $HostelModel->get_itinerary_Hostel($hostel_id);
+            //print_r($hostel);exit;
+            if($hostel['status'] =200){
+                 $data['result']  = json_decode(json_encode($hostel['hostel_details']));
             }
            // echo "<pre>";
             //print_r($data['result']);
-            $data['Headding']="Itinerary Trek";
+            $data['Headding']="Itinerary Hostel";
             if($this->validate($rules)){
 
             }else{
                 $data['validation'] = $this->validator;
             }
-            echo view('treking/trek_itinerary',$data);
+            echo view('hostel/hostel_itinerary',$data);
     }
 
 
@@ -183,9 +183,9 @@ class TrekController extends Controller
             $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
             $filename = $name.'.'.$ext;
 
-           $file->move(baseimgURL.'Trek/'.$foldername.'/', $filename);
+           $file->move(baseimgURL.'Hostel/'.$foldername.'/', $filename);
           
-            echo SITEURL.$foldername.'/Trek/'.$filename; //change this URL
+            echo SITEURL.$foldername.'/Hostel/'.$filename; //change this URL
           } else {
             echo $message = 'Ooops!  Your upload triggered the following error:  '.$_FILES['file']['error'];
           }
@@ -193,35 +193,35 @@ class TrekController extends Controller
         
     }
 
-    function trekiterinarystore()
+    function hosteliterinarystore()
     {
         $entered = $this->request->getVar();
        
         helper(['form']);
        
         if(1){ 
-            $TrekModel = new TrekModel();
+            $HostelModel = new HostelModel();
             for($i=0;$i<count($entered);$i++){
             if($entered['iterinary_id'][$i]){
                 $udata = [
                     'iterinary_id'=>$entered['iterinary_id'][$i],
                     'iterinary_title'=>$this->request->getVar('iterinary_title')[$i],
                     'iterinary_details' =>$this->request->getVar('iterinary_details')[$i],
-                    'trek_id'=>$this->request->getVar('trek_id'),
+                    'hostel_id'=>$this->request->getVar('hostel_id'),
                     'modified_date'=>date('Y-m-d H:i:s'),
                     'modified_by'=>"1"
                 ];
-                $a[] = $TrekModel->edittrekiterinarydata($udata);
+                $a[] = $HostelModel->edithosteliterinarydata($udata);
             }else{                
                 $idata = [                    
-                    'trek_id'=>$this->request->getVar('trek_id'),
+                    'hostel_id'=>$this->request->getVar('hostel_id'),
                     'created_date'=>date('Y-m-d H:i:s'),
                     'created_by'=>"1",
                     'status'=>"0",
                     'iterinary_title'=>$this->request->getVar('iterinary_title')[$i],
                     'iterinary_details' =>$this->request->getVar('iterinary_details')[$i]
                 ];
-                $a[] = $TrekModel->addtrekiterinarydata($idata);                
+                $a[] = $HostelModel->addhosteliterinarydata($idata);                
             }           
             //print_r($udata);exit;
         }
@@ -231,12 +231,12 @@ class TrekController extends Controller
            // print_r($a);exit;
             if($a){
                 $_SESSION['message'] = $a->message;
-                return redirect()->to('/trekslist');
+                return redirect()->to('/hostelslist');
             }
             
         }else{
             $data['validation'] = $this->validator;
-            echo view('treking\addtrek', $data);
+            echo view('hostel\addhostel', $data);
         }
     }
    
